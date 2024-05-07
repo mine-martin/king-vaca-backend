@@ -4,33 +4,24 @@ import { AppService } from './app.service';
 import { CarsModule } from './cars/cars.module';
 import { HousesModule } from './houses/houses.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configValidationSchema } from './config.schema';
+import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   controllers: [AppController],
   providers: [AppService],
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`./.env}`],
-      validationSchema: configValidationSchema,
+      validationSchema: Joi.object({
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.number().required(),
+        DB_USERNAME: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        DB_DATABASE: Joi.string().required(),
+      }),
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
-        return {
-          type: 'postgres',
-          host: configService.get('DB_HOST'),
-          port: configService.get('DB_PORT'),
-          password: configService.get('DB_PASSWORD'),
-          username: configService.get('DB_USERNAME'),
-          database: configService.get('DB_DATABASE'),
-          autoLoadEntities: true,
-          synchronize: true,
-        };
-      },
-    }),
+    DatabaseModule,
     CarsModule,
     HousesModule,
   ],

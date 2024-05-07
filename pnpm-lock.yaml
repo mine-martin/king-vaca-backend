@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@hapi/joi':
-        specifier: ^17.1.1
-        version: 17.1.1
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.3.8(reflect-metadata@0.2.2)(rxjs@7.8.1)
@@ -330,23 +327,8 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@hapi/address@4.1.0':
-    resolution: {integrity: sha512-SkszZf13HVgGmChdHo/PxchnSaCJ6cetVqLzyciudzZRT0jcOouIF/Q93mgjw8cce+D+4F4C1Z/WrfFN+O3VHQ==}
-    deprecated: Moved to 'npm install @sideway/address'
-
-  '@hapi/formula@2.0.0':
-    resolution: {integrity: sha512-V87P8fv7PI0LH7LiVi8Lkf3x+KCO7pQozXRssAHNXXL9L1K+uyu4XypLXwxqVDKgyQai6qj3/KteNlrqDx4W5A==}
-    deprecated: Moved to 'npm install @sideway/formula'
-
   '@hapi/hoek@9.3.0':
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
-
-  '@hapi/joi@17.1.1':
-    resolution: {integrity: sha512-p4DKeZAoeZW4g3u7ZeRo+vCDuSDgSvtsB/NpfjXEHTUjSeINAi/RrVOWiVQ1isaoLzMvFEhe8n5065mQq1AdQg==}
-    deprecated: Switch to 'npm install joi'
-
-  '@hapi/pinpoint@2.0.1':
-    resolution: {integrity: sha512-EKQmr16tM8s16vTT3cA5L0kZZcTMU5DUOZTuvpnY738m+jyP3JIUj+Mm1xc1rsLkGBQ/gVnfKYPwOmPg1tUR4Q==}
 
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
@@ -3311,23 +3293,7 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@hapi/address@4.1.0':
-    dependencies:
-      '@hapi/hoek': 9.3.0
-
-  '@hapi/formula@2.0.0': {}
-
   '@hapi/hoek@9.3.0': {}
-
-  '@hapi/joi@17.1.1':
-    dependencies:
-      '@hapi/address': 4.1.0
-      '@hapi/formula': 2.0.0
-      '@hapi/hoek': 9.3.0
-      '@hapi/pinpoint': 2.0.1
-      '@hapi/topo': 5.1.0
-
-  '@hapi/pinpoint@2.0.1': {}
 
   '@hapi/topo@5.1.0':
     dependencies:
