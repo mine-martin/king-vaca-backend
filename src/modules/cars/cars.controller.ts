@@ -23,10 +23,12 @@ export class CarsController {
     status: 201,
     description: 'The car profile has been successfully created.',
   })
-  create(
+  async create(
     @Body() createCarProfileDto: CreateCarProfileDto,
-  ): Promise<CarProfile> {
-    return this.carsService.createNewCarProfile(createCarProfileDto);
+  ): Promise<string> {
+    const createdProfile =
+      await this.carsService.createNewCarProfile(createCarProfileDto);
+    return createdProfile;
   }
 
   // Get all car profiles
@@ -56,35 +58,37 @@ export class CarsController {
   }
 
   // Update car profile by ID
-  @Put(':id')
-  @ApiOperation({ summary: 'Update car profile by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns updated car profile.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Car profile not found.',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() updateCarProfileDto: CreateCarProfileDto,
-  ): Promise<CarProfile> {
-    return this.carsService.updateCarProfile(id, updateCarProfileDto);
-  }
+@Put(':id')
+@ApiOperation({ summary: 'Update car profile by ID' })
+@ApiResponse({
+  status: 200,
+  description: 'Returns updated car profile.',
+})
+@ApiResponse({
+  status: 404,
+  description: 'Car profile not found.',
+})
+async update(
+  @Param('id') id: string,
+  @Body() updateCarProfileDto: CreateCarProfileDto,
+): Promise<string> {
+  const updatedProfile = await this.carsService.updateCarProfile(id, updateCarProfileDto);
+  return updatedProfile;
+}
 
-  // Delete car profile by ID
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete car profile by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Car profile has been successfully deleted.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Car profile not found.',
-  })
-  delete(@Param('id') id: string): Promise<void> {
-    return this.carsService.deleteCarProfile(id);
-  }
+// Delete car profile by ID
+@Delete(':id')
+@ApiOperation({ summary: 'Delete car profile by ID' })
+@ApiResponse({
+  status: 200,
+  description: 'Car profile has been successfully deleted.',
+})
+@ApiResponse({
+  status: 404,
+  description: 'Car profile not found.',
+})
+async delete(@Param('id') id: string): Promise<void> {
+  await this.carsService.deleteCarProfile(id);
+}
+
 }

@@ -15,20 +15,22 @@ export class CarsProfileService {
     private readonly carProfileRepository: Repository<CarProfile>,
   ) {}
 
+  // Create a new car profile
   async createNewCarProfile(
     createCarProfileDto: CreateCarProfileDto,
-  ): Promise<CarProfile> {
+  ): Promise<string> {
     try {
       const newCarProfile =
         this.carProfileRepository.create(createCarProfileDto);
       const savedCarProfile =
         await this.carProfileRepository.save(newCarProfile);
-      return savedCarProfile;
+      return `Car profile with ID ${savedCarProfile.id} has been created`;
     } catch (error) {
       throw new BadRequestException('Failed to create car profile');
     }
   }
 
+  // Get all car profiles
   async getAllCarProfiles(): Promise<CarProfile[]> {
     try {
       const carProfiles = await this.carProfileRepository.find();
@@ -38,6 +40,7 @@ export class CarsProfileService {
     }
   }
 
+  // Get car profile by ID
   async getCarProfileById(id: string): Promise<CarProfile> {
     try {
       const carProfile = await this.carProfileRepository.findOneOrFail({
@@ -49,27 +52,30 @@ export class CarsProfileService {
     }
   }
 
-  async updateCarProfile(
-    id: string,
-    updateCarProfileDto: CreateCarProfileDto,
-  ): Promise<CarProfile> {
-    try {
-      const carProfile = await this.getCarProfileById(id);
-      Object.assign(carProfile, updateCarProfileDto);
-      const updatedCarProfile =
-        await this.carProfileRepository.save(carProfile);
-      return updatedCarProfile;
-    } catch (error) {
-      throw new BadRequestException('Failed to update car profile');
-    }
+ // Update car profile by ID
+async updateCarProfile(
+  id: string,
+  updateCarProfileDto: CreateCarProfileDto,
+): Promise<string> {
+  try {
+    const carProfile = await this.getCarProfileById(id);
+    Object.assign(carProfile, updateCarProfileDto);
+    await this.carProfileRepository.save(carProfile);
+    return `Car profile with ID ${id} has been updated`;
+  } catch (error) {
+    throw new BadRequestException('Failed to update car profile');
   }
+}
 
-  async deleteCarProfile(id: string): Promise<void> {
-    try {
-      const carProfile = await this.getCarProfileById(id);
-      await this.carProfileRepository.remove(carProfile);
-    } catch (error) {
-      throw new NotFoundException(`Car profile with id ${id} not found`);
-    }
+// Delete car profile by ID
+async deleteCarProfile(id: string): Promise<string> {
+  try {
+    const carProfile = await this.getCarProfileById(id);
+    await this.carProfileRepository.remove(carProfile);
+    return `Car profile with ID ${id} has been deleted`;
+  } catch (error) {
+    throw new NotFoundException(`Car profile with id ${id} not found`);
   }
+}
+
 }
