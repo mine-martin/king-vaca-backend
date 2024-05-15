@@ -59,9 +59,9 @@ class OtherDetails {
   Comments: string;
 }
 
-@Entity()
+@Entity({ name: 'houses' })
 export class HouseDetails {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()

@@ -10,6 +10,6 @@ export class InitialMigration1715435333747 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE "car"`);
+    await queryRunner.query(`DROP TABLE "cars"`);
   }
 }
