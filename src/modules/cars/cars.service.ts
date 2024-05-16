@@ -32,12 +32,11 @@ export class CarsProfileService {
 
   // Get all car profiles
   async getAllCarProfiles(): Promise<CarProfile[]> {
-    try {
-      const carProfiles = await this.carProfileRepository.find();
-      return carProfiles;
-    } catch (error) {
+    const carProfiles = await this.carProfileRepository.find();
+    if (carProfiles.length === 0) {
       throw new NotFoundException('No car profiles found');
     }
+    return carProfiles;
   }
 
   // Get car profile by ID
@@ -52,30 +51,29 @@ export class CarsProfileService {
     }
   }
 
- // Update car profile by ID
-async updateCarProfile(
-  id: string,
-  updateCarProfileDto: CreateCarProfileDto,
-): Promise<string> {
-  try {
-    const carProfile = await this.getCarProfileById(id);
-    Object.assign(carProfile, updateCarProfileDto);
-    await this.carProfileRepository.save(carProfile);
-    return `Car profile with ID ${id} has been updated`;
-  } catch (error) {
-    throw new BadRequestException('Failed to update car profile');
+  // Update car profile by ID
+  async updateCarProfile(
+    id: string,
+    updateCarProfileDto: CreateCarProfileDto,
+  ): Promise<string> {
+    try {
+      const carProfile = await this.getCarProfileById(id);
+      Object.assign(carProfile, updateCarProfileDto);
+      await this.carProfileRepository.save(carProfile);
+      return `Car profile with ID ${id} has been updated`;
+    } catch (error) {
+      throw new BadRequestException('Failed to update car profile');
+    }
   }
-}
 
-// Delete car profile by ID
-async deleteCarProfile(id: string): Promise<string> {
-  try {
-    const carProfile = await this.getCarProfileById(id);
-    await this.carProfileRepository.remove(carProfile);
-    return `Car profile with ID ${id} has been deleted`;
-  } catch (error) {
-    throw new NotFoundException(`Car profile with id ${id} not found`);
+  // Delete car profile by ID
+  async deleteCarProfile(id: string): Promise<string> {
+    try {
+      const carProfile = await this.getCarProfileById(id);
+      await this.carProfileRepository.remove(carProfile);
+      return `Car profile with ID ${id} has been deleted`;
+    } catch (error) {
+      throw new NotFoundException(`Car profile with id ${id} not found`);
+    }
   }
-}
-
 }
