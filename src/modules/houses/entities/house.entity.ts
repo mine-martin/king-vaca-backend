@@ -62,7 +62,7 @@ class OtherDetails {
 @Entity({ name: 'houses' })
 export class HouseDetails {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   HouseDetailsListimage: string;

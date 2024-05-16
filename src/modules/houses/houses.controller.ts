@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   Put,
+  NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { HouseDetailsService } from './houses.service';
 import { CreateHouseDetailsDto } from './dto/house_profile.dto';
@@ -16,32 +18,53 @@ export class HouseDetailsController {
   constructor(private readonly houseDetailsService: HouseDetailsService) {}
 
   @Get()
-  findAll(): Promise<HouseDetails[]> {
-    return this.houseDetailsService.findAll();
+  async findAll(): Promise<HouseDetails[]> {
+    return this.houseDetailsService.getAllHouseDetails();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<HouseDetails> {
-    return this.houseDetailsService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<HouseDetails> {
+    try {
+      return await this.houseDetailsService.getHouseDetailsById(id);
+    } catch (error) {
+      throw new NotFoundException(`House details with id ${id} not found`);
+    }
   }
 
   @Post('/new')
-  create(
+  async create(
     @Body() createHouseDetailsDto: CreateHouseDetailsDto,
-  ): Promise<HouseDetails> {
-    return this.houseDetailsService.create(createHouseDetailsDto);
+  ): Promise<string> {
+    try {
+      return await this.houseDetailsService.createHouseDetails(
+        createHouseDetailsDto,
+      );
+    } catch (error) {
+      throw new BadRequestException('Failed to create house details');
+    }
   }
 
   @Put(':id')
-  update(
-    @Param('id') id: number,
+  async update(
+    @Param('id') id: string,
     @Body() updateHouseDetailsDto: CreateHouseDetailsDto,
-  ): Promise<HouseDetails> {
-    return this.houseDetailsService.update(id, updateHouseDetailsDto);
+  ): Promise<string> {
+    try {
+      return await this.houseDetailsService.updateHouseDetails(
+        id,
+        updateHouseDetailsDto,
+      );
+    } catch (error) {
+      throw new BadRequestException('Failed to update house details');
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.houseDetailsService.remove(id);
+  async remove(@Param('id') id: string): Promise<string> {
+    try {
+      return await this.houseDetailsService.deleteHouseDetails(id);
+    } catch (error) {
+      throw new NotFoundException(`House details with id ${id} not found`);
+    }
   }
 }

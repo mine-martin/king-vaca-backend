@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateHouseDetailsDto } from './dto/house_profile.dto';
@@ -8,33 +12,68 @@ import { HouseDetails } from './entities/house.entity';
 export class HouseDetailsService {
   constructor(
     @InjectRepository(HouseDetails)
-    private houseDetailsRepository: Repository<HouseDetails>,
+    private readonly houseDetailsRepository: Repository<HouseDetails>,
   ) {}
 
-  findAll(): Promise<HouseDetails[]> {
-    return this.houseDetailsRepository.find();
+  // Create a new house profile
+  async createHouseDetails(
+    createHouseDetailsDto: CreateHouseDetailsDto,
+  ): Promise<string> {
+    try {
+      const newHouseDetails =
+        this.houseDetailsRepository.create(createHouseDetailsDto);
+      const savedHouseDetails =
+        await this.houseDetailsRepository.save(newHouseDetails);
+      return `House details with ID ${savedHouseDetails.id} have been created`;
+    } catch (error) {
+      throw new BadRequestException('Failed to create house details');
+    }
   }
 
-  findOne(id: number): Promise<HouseDetails> {
-    return this.houseDetailsRepository.findOne({ where: { id } });
+  // Get all house profiles
+  async getAllHouseDetails(): Promise<HouseDetails[]> {
+    const houseDetailsList = await this.houseDetailsRepository.find();
+    if (houseDetailsList.length === 0) {
+      throw new NotFoundException('No house details found');
+    }
+    return houseDetailsList;
   }
 
-  create(createHouseDetailsDto: CreateHouseDetailsDto): Promise<HouseDetails> {
-    const houseDetails = this.houseDetailsRepository.create(
-      createHouseDetailsDto,
-    );
-    return this.houseDetailsRepository.save(houseDetails);
+  // Get house details by ID
+  async getHouseDetailsById(id: string): Promise<HouseDetails> {
+    try {
+      const houseDetails = await this.houseDetailsRepository.findOneOrFail({
+        where: { id },
+      });
+      return houseDetails;
+    } catch (error) {
+      throw new NotFoundException(`House details with id ${id} not found`);
+    }
   }
 
-  async update(
-    id: number,
+  // Update house details by ID
+  async updateHouseDetails(
+    id: string,
     updateHouseDetailsDto: CreateHouseDetailsDto,
-  ): Promise<HouseDetails> {
-    await this.houseDetailsRepository.update(id, updateHouseDetailsDto);
-    return this.houseDetailsRepository.findOne({ where: { id } });
+  ): Promise<string> {
+    try {
+      const houseDetails = await this.getHouseDetailsById(id);
+      Object.assign(houseDetails, updateHouseDetailsDto);
+      await this.houseDetailsRepository.save(houseDetails);
+      return `House details with ID ${id} have been updated`;
+    } catch (error) {
+      throw new BadRequestException('Failed to update house details');
+    }
   }
 
-  async remove(id: number): Promise<void> {
-    await this.houseDetailsRepository.delete(id);
+  // Delete house details by ID
+  async deleteHouseDetails(id: string): Promise<string> {
+    try {
+      const houseDetails = await this.getHouseDetailsById(id);
+      await this.houseDetailsRepository.remove(houseDetails);
+      return `House details with ID ${id} have been deleted`;
+    } catch (error) {
+      throw new NotFoundException(`House details with id ${id} not found`);
+    }
   }
 }
