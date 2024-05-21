@@ -15,17 +15,17 @@ export class CreateCarProfileDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  photo1: string;
+  photo1: Uint8Array;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  photo2: string;
+  photo2: Uint8Array;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  photo3: string;
+  photo3: Uint8Array;
 
   @ApiProperty()
   @IsNotEmpty()

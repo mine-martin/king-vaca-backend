@@ -8,28 +8,38 @@ import {
   Put,
   Delete,
   NotFoundException,
+  BadRequestException,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CarsProfileService } from './cars.service';
 import { CreateCarProfileDto } from './dto/car_profile.dto';
 import { CarProfile } from './entities/car.entity';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsProfileService) {}
 
   // Create a new car profile
-  @Post('/new')
-  @ApiOperation({ summary: 'Create a new car profile' })
-  @ApiResponse({
-    status: 201,
-    description: 'The car profile has been successfully created.',
-  })
-  async create(
+  @Post('/upload')
+  @UseInterceptors(FilesInterceptor('photos', 3))
+  async createCarProfile(
     @Body() createCarProfileDto: CreateCarProfileDto,
-  ): Promise<string> {
-    const createdProfile =
-      await this.carsService.createNewCarProfile(createCarProfileDto);
-    return createdProfile;
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    if (files.length !== 3) {
+      throw new BadRequestException('Three photos are required');
+    }
+
+    const [photo1, photo2, photo3] = files.map(file => file.buffer);
+
+    return this.carsService.createNewCarProfile(
+      createCarProfileDto,
+      photo1,
+      photo2,
+      photo3,
+    );
   }
 
   // Get all car profiles

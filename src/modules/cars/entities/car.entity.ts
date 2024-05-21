@@ -11,14 +11,14 @@ export class CarProfile {
   @Column()
   price: string;
 
-  @Column()
-  photo1: string;
+  @Column('bytea')
+  photo1: Uint8Array;
 
-  @Column()
-  photo2: string;
+  @Column('bytea')
+  photo2: Uint8Array;
 
-  @Column()
-  photo3: string;
+  @Column('bytea')
+  photo3: Uint8Array;
 
   @Column()
   rating: string;
