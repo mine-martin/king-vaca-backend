@@ -7,6 +7,7 @@ import { HousesModule } from '@/modules/houses/houses.module';
 import { LoggerModule } from 'nestjs-pino';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from '../data-source';
+import { UploadModule } from '@/modules/upload/upload.module';
 
 export const appModules: (
   | Type<any>
@@ -29,4 +30,5 @@ export const appModules: (
 
   CarsModule,
   HousesModule,
+  UploadModule
 ];
